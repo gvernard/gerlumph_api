@@ -1,0 +1,89 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="jb-sign-up-wrap jb-container">
+  <div class="jb-form">
+
+    <form id="email-form" class="jb-form-1" method="post" action="{% url 'register' %}">
+      <img src="{% static 'images/JB_Login_SLED-Logo.png' %}" loading="lazy" width="40" alt="" class="jb-image-1">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+      <div class="jb-form">
+        <label for="{{ form.username.id_for_label }}">Username*:</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.first_name.id_for_label }}">First name*:</label>
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.last_name.id_for_label }}">Last name*:</label>
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.email.id_for_label }}">Email*:</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.password1.id_for_label }}">Password*:</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.password2.id_for_label }}">Password confirmation*:</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.affiliation.id_for_label }}">Affiliation*:</label>
+        {{ form.affiliation }}
+        {{ form.affiliation.errors }}
+      </div>
+
+      <div class="jb-form">
+        <label for="{{ form.info.id_for_label }}">Info*:</label>
+        {{ form.info }}
+        {{ form.info.errors }}
+      </div>
+
+      <div class="jb-form jb-table-no-lines">
+        <label for="{{ form.captcha.id_for_label }}">I am human:</label>
+        {{ form.captcha }}
+        {{ form.captcha.errors }}
+      </div>
+      
+      <div class="align-center">
+	<input type="submit" value="Register" data-wait="Please wait..." class="jb-submit-button-1 w-button">
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extrastyles %}
+<link href="{% static 'gerlumph_registration/css/register.css' %}" rel="stylesheet" />
+{% endblock extrastyles %}
+
+{% block extrascripts %}
+<script type="text/javascript" src="{% static 'gerlumph_registration/js/register.js' %}"></script>
+{% endblock extrascripts %}
+
+

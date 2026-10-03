@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>Strong Gravitational Lens database</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.typekit.net/pkl4bli.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{% static 'css/jb_style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/sled-global.css' %}" rel="stylesheet" />
+    {% block extrastyles %}
+    {% endblock extrastyles %}
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" integrity="sha384-pvXSwSU09c+q9mPyY++ygUHWIYRoaxgnJ/JC5wcOzMb/NVVu+IDniiB9qWp3ZNWM" crossorigin="anonymous" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha384-d3UHjPdzJkZuk5H3qKYMLRyWLAQBJbby2yr2Q58hXXtAGF8RSNO9jpLDlKKPv5v3" crossorigin="anonymous" type="text/javascript"></script>
+    <script src="{% static 'js/global_search.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/load_fonts.js' %}" type="text/javascript"></script>
+    {% block extrascripts %}
+    {% endblock extrascripts %}
+  </head>
+  
+  
+  <body>
+    <div class="persistent-message-container">
+      {% if current_messages %}
+      {% for message in current_messages %}
+      <div class="alert alert-icon alert-{{ message.tag }} mb-0 jb-message-banner" role="alert">
+	{{ message.message|safe }}
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    
+    <div class="alert-message-container">
+      {% if messages %}
+      {% for message in messages %}
+      {% if message.tags %}
+      <div id="alert-message" class="alert alert-icon alert-{{ message.tags }} alert-dismissible fade show mb-0 jb-message-banner" role="alert">
+	{{ message|safe }}
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	  <span aria-hidden="true">&times;</span>
+	</button>
+      </div>
+      {% else %}
+      <div id="alert-message" class="jb-message-banner">
+	{{ message }}
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	  <span aria-hidden="true">&times;</span>
+	</button>
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    
+    <!-- Top navigation bar -->
+    <div class="jb-navbar-container jb-table-no-lines">
+      <table class="jb-navbar-table-top">
+	<tr>
+	  <td>
+	    {% comment %}
+	    <a href="{% url 'sled_home:homepage' %}" class="jb-nav-brand"><img src="{% static 'images/JB_Master Header_Logo.png' %}" loading="lazy" width="248" alt=""></a>
+	    {% endcomment %}
+	  </td>
+	  <td>
+	    <img src="{% static 'icons/search.svg' %}" id="global_search2">
+	  </td>
+	  <td>
+	    {% if user.is_authenticated %}
+	    <a href="{% url 'logout'%}" class="jb-navbar-login"><span class="text-span">Logout</span></a>
+	    {% else %}
+	    <a href="{% url 'login'%}" class="jb-navbar-login"><span class="text-span">Login</span></a>
+	    {% endif %}
+	  </td>
+	</tr>
+      </table>
+      <nav role="navigation">
+	<table class="jb-navbar-table-bottom jb-navbar">
+	  <tr>
+	    {% comment %}
+	    <td><a href="{% url 'sled_home:homepage' %}">Home</a></td>
+	    <td><a href="{% url 'lenses:lens-index' %}">Lenses</a></td>
+	    <td><a href="{% url 'sled_collections:collections-list' %}">Collections</a></td>
+	    <td><a href="{% url 'sled_papers:paper-query' %}">Papers</a></td>
+	    <td><a href="{% url 'sled_groups:group-list' %}">Groups</a></td>
+	    <td><a href="{% url 'sled_guide:help' %}">Help & Docs</a></td>
+	    {% endcomment %}
+	    <td><a href="{% url 'gerlumph_users:user-query' %}">Users</a></td>
+	    {% if user.is_authenticated %}
+	    <td>
+	      <a href="{% url 'gerlumph_users:user-profile' %}">{{ user.username }}</a>
+	      {% if user.get_pending_tasks|length > 0 or user.notifications.unread|length > 0 %}
+	      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger"><img src="{% static 'icons/exclamation.svg' %}"></span>
+	      {% endif %}
+	    </td>
+	    {% endif %}
+	    {% if user.limitsandroles.is_admin %}
+	    <td>
+	      <a href="{% url 'gerlumph_users:user-admin' %}">Admin</a>
+	      {% if user.get_admin_pending_tasks|length > 0 or user.get_admin_notifications|length > 0 %}
+	      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger"><img src="{% static 'icons/exclamation.svg' %}"></span>
+	      {% endif %}
+	    </td>
+	    {% endif %}	
+	  </tr>
+	</table>
+      </nav>
+    </div>
+
+    
+    {% block content %}
+    {% endblock %}
+
+
+    <script src="{% static 'js/message_banner.js' %}" type="text/javascript"></script>
+  </body>
+    
+</html>

@@ -1,0 +1,52 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="jb-sign-up-wrap jb-container">
+  <div class="jb-form">
+
+    <form id="email-form" class="jb-form-1" method="post" action="">
+      <img src="{% static 'images/JB_Login_SLED-Logo.png' %}" loading="lazy" width="40" alt="" class="jb-image-1">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      
+      <div class="jb-form">
+        <label for="{{ form.username.id_for_label }}">Username:</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      
+      <div class="jb-form">	
+        <label for="{{ form.password.id_for_label }}">Password:</label>
+        {{ form.password }}
+        {{ form.password.errors }}
+      </div>
+
+      
+      <div class="align-center">
+	<input type="submit" value="Login" data-wait="Please wait..." class="jb-submit-button-1 w-button">
+      </div>
+
+      <br>
+      <div class="align-center">
+	New? Register <a href="{% url 'register' %}">here</a>.
+      </div>
+      <div class="align-center">
+	Forgotten password? Click <a href="{% url 'password_reset' %}">here</a>.
+      </div>
+
+    </form>
+    
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block extrastyles %}
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+<script type="text/javascript" src="{% static 'gerlumph_registration/js/login.js' %}"></script>
+{% endblock extrascripts %}

@@ -1,0 +1,22 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+
+{% block content %}
+{% include "modal_container.html" %}
+
+{% include "gerlumph_users/user_visit_card_content.html" with gerlumph_user=gerlumph_user %}
+{% endblock content %}
+
+
+{% block extrastyles %}
+<link href="{% static 'gerlumph_users/css/user_query.css' %}" rel="stylesheet" />
+<link href="{% static 'gerlumph_users/css/user_visit_card.css' %}" rel="stylesheet" />
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+<script src="{% static 'gerlumph_users/js/user_visit_card.js' %}"></script>
+{% endblock extrascripts %}
