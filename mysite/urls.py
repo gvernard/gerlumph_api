@@ -16,25 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.staticfiles import views
-from django.contrib.auth import views as auth_views
-from django.views.generic import TemplateView
-
-from gerlumph_registration import views as vregistration
-
+#from django.contrib.staticfiles import views
+#from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path('captcha/', include('captcha.urls')),
-    path('register/', vregistration.register, name='register'),
-    path('login/', vregistration.myLoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='gerlumph_registration/login.html'), name='logout'),
-    path("password_reset", vregistration.password_reset_request, name="password_reset"),
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='password/password_reset_done.html'), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="password/password_reset_confirm.html"), name='password_reset_confirm'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='password/password_reset_complete.html'), name='password_reset_complete'),    
     path('users/', include('gerlumph_users.urls'), name='gerlumph_users'),
-
+    path('accounts/', include('gerlumph_registration.urls'), name='gerlumph_registration'),
 ]
 

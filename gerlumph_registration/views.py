@@ -1,22 +1,18 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
+from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.tokens import default_token_generator
-from django.template.loader import render_to_string
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.utils.html import strip_tags
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.views import LoginView
 from django.contrib.sites.models import Site
-from django.contrib import messages
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.template import Context
 from django.template.response import TemplateResponse
 
@@ -77,26 +73,34 @@ def password_reset_request(request):
             data = password_reset_form.cleaned_data['email']
             associated_users = Users.objects.filter(Q(email=data))
             if associated_users.exists():
-                site = Site.objects.get_current()
 
-                for user in associated_users:
-                    subject = 'GERLUMPH: Password reset'
-                    html_message = get_template('emails/password_reset.html')
-                    mycontext = {
-                        'first_name': user.first_name,
-                        'protocol': request.scheme,
-                        'domain': site.domain, #site.domain, THIS HAS TO BE SET MANUALLY...
-                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                        'token': default_token_generator.make_token(user),
-                    }
-                    html_message = html_message.render(mycontext)
-                    plain_message = strip_tags(html_message)
+                user = associated_users.first()
+                subject = 'GERLUMPH: Password reset'
+                html_message = get_template('emails/password_reset.html')
+                domain = Site.objects.get_current().domain
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                mycontext = {
+                    'first_name': user.first_name,
+                    'protocol': request.scheme,
+                    'domain': domain, #site.domain, THIS HAS TO BE SET MANUALLY...
+                    'uid': uid,
+                    'token': token,
+                }
+                html_message = html_message.render(mycontext)
+                plain_message = strip_tags(html_message)
+                
+                user_email = user.email
+                from_email = 'gerlumph-no-reply@gerlumph.amnh.org'
+                send_mail(subject,plain_message,from_email,[user_email],html_message=html_message)
+                link = request.scheme+'://'+domain+reverse('gerlumph_registration:password_reset_confirm',args=[uid,token])
+                #print(link)
+                
+                return redirect ("gerlumph_registration:password_reset_done")
+            else:
+                password_reset_form.add_error(None,"This email address does not correspond to an existing user.")
+                return render(request=request, template_name="password/password_reset.html", context={"password_reset_form":password_reset_form})
 
-                    user_email = user.email
-                    from_email = 'gerlumph-no-reply@gerlumph.amnh.org'
-                    send_mail(subject,plain_message,from_email,[user_email],html_message=html_message)
-
-                return redirect ("/password_reset/done/")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="password/password_reset.html", context={"password_reset_form":password_reset_form})
 

@@ -6,7 +6,7 @@
 <div class="jb-sign-up-wrap jb-container">
   <div class="jb-form">
 
-    <form id="email-form" class="jb-form-1" method="post" action="{% url 'register' %}">
+    <form id="email-form" class="jb-form-1" method="post" action="{% url 'gerlumph_registration:register' %}">
       <img src="{% static 'images/JB_Login_SLED-Logo.png' %}" loading="lazy" width="40" alt="" class="jb-image-1">
       {% csrf_token %}
 
