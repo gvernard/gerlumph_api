@@ -1,0 +1,52 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+{% block content %}
+<div class="jb-container">
+ 
+  <div>
+    <table>
+      <tr>
+	<td>
+	  Created at:
+	</td>
+	<td>
+	  {{ download.created_at }}
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  Requested by user:
+	</td>
+	<td>
+	  <a href="{{ download.owner.get_absolute_url }}" target="_blank">{{ download.owner.username }}</a>
+	</td>
+      </tr>
+    </table>
+  </div>
+
+
+  <div>
+    <table>  
+      {% for map,icon in list %}
+      <tr>
+	<td><a href="{{ map.get_absolute_url }}" target="_blank">{{ map.id }}</a></td>
+	<td><img src="{{icon}}" alt="icon" /></td>
+	<td>{{map.kappa}} {{map.gamma}} {{map.s}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  
+</div>
+{% endblock content %}
+
+
+{% block extrastyles %}
+<link href="{% static 'gerlumph_downloads/css/download_detail.css' %}" rel="stylesheet" />
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+{% endblock extrascripts %}

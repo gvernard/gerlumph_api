@@ -29,5 +29,7 @@ urlpatterns = [
     path('accounts/', include('gerlumph_registration.urls'), name='gerlumph_registration'),
     path('limits/', include('gerlumph_limits.urls'), name='gerlumph_limits'),
     path('tasks/', include('gerlumph_tasks.urls'), name='gerlumph_tasks'),
+    path('maps/', include('gerlumph_maps.urls'), name='gerlumph_maps'),
+    path('downloads/', include('gerlumph_downloads.urls'), name='gerlumph_downloads'),
 ]
 

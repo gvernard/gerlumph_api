@@ -1,0 +1,42 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+{% block content %}
+<div class="jb-container">
+ 
+  <div>
+    {{ map.id }}
+    KAPPA
+    GAMMA
+    ETC
+  </div>
+
+
+  <div>
+    <table>
+      <tr>
+	<td>
+	  <img src="{{ icon }}" alt="icon" />
+	</td>
+	<td>
+	  <img src="{{ sample }}" alt="sample" />
+	</td>	
+	<td>
+	  <img src="{{ mpd }}" alt="mpd" />
+	</td>	
+      </tr>
+    </table>
+  </div>
+
+  
+</div>
+{% endblock content %}
+
+
+{% block extrastyles %}
+<link href="{% static 'gerlumph_maps/css/map_detail.css' %}" rel="stylesheet" />
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+{% endblock extrascripts %}
