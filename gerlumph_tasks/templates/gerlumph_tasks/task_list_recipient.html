@@ -1,0 +1,84 @@
+{% load static %}
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Task type</th>
+      <th>Created at</th>
+      <th>From</th>
+
+      {% if admin_page  %}
+      <th> Assigned to </th>
+      {% endif %}
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in recipient %}
+    <tr>
+      <td>
+        {% if task.status == "P" %}
+        <span class="jb-bold jb-color-red">
+          {{ task.status }}
+        </span>
+
+        {% else %}
+        <span class="jb-bold jb-color-green">
+          {{ task.status }}
+        </span>
+        {% endif %}
+      </td>
+
+      <td>{{ task.task_type }}</td>
+      <td>{{ task.created_at }}</td>
+      <td>{{ task.owner }}</td>
+
+      {% if admin_page %}
+      <td>
+        {{ task.cargo.user_admin }}
+      </td>
+      {% endif %}
+
+
+      <td>
+        {% if admin_page %}
+	
+        {% if task.status == 'C' %}
+        <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-detail-admin-recipient' task.id %}">
+          <img src="{% static 'icons/eye-fill.svg' %}">
+          View
+        </button>
+        {% else %}
+        <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-detail-admin-recipient' task.id %}">
+          <img src="{% static 'icons/send-fill.svg' %}">
+          Respond
+        </button>
+        {% endif %}
+        
+        {% else %}
+        
+        {% if task.status == 'C' %}
+	<button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-detail-recipient' task.id %}">
+          <img src="{% static 'icons/eye-fill.svg' %}">
+          View
+	</button>
+	{% else %}
+        <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-detail-recipient' task.id %}">
+          <img src="{% static 'icons/send-fill.svg' %}">
+          Respond
+	</button>
+	{% endif %}
+	
+        {% endif %}
+      </td>
+      
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">No tasks</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -35,257 +35,16 @@
       <div class="p">
 	<br>
 	{% if N_tasks > 0 %}
-	{% include 'sled_tasks/task_list_recipient.html' with recipient=pending_tasks admin_page='admin' %}
+	{% include 'gerlumph_tasks/task_list_recipient.html' with recipient=pending_tasks admin_page='admin' %}
 	{% else %}
 	<p class="jb-paragraph-2">No pending confirmation tasks</p>
 	{% endif %}
-	<a href="{% url 'sled_tasks:tasks-list-admin' %}">See all tasks</a>
+	<a href="{% url 'gerlumph_tasks:tasks-list-admin' %}">See all tasks</a>
 	<br>
 	<br>
       </div>
     </div>
     
-
-    
-    <div class="c c-admin">
-      <input class="accordion-checkbox" type="checkbox" id="faq-7">
-      <h1 class="jb-heading-2">
-	<label for="faq-7">
-	  Notifications
-	  {% if N_note_unread > 0 %}
-	  <span class="jb-important-text">
-	  &nbsp; - you have <b>{{N_note_unread}}</b> unread {{ N_note_unread|pluralize:"notification,notifications" }}!
-	  </span>
-	  {% endif %}
-	</label>
-      </h1>
-      <div class="p">
-	<br>
-	{% if N_note_unread > 0 %}
-	{% include "notifications_container.html" with notifications=unread_notifications %}
-	{% else %}
-	<p class="jb-paragraph-2">No new notifications</p>
-	{% endif %}
-	<a href="{% url 'sled_notifications:notifications-list-admin' %}">See all notifications</a>
-	<br>
-	<br>
-      </div>
-    </div>
-
-    
-
-    <div class="c c-admin">
-      <input class="accordion-checkbox" type="checkbox" id="instruments">
-      <h1 class="jb-heading-2">
-	<label for="instruments">
-	  Instruments
-	</label>
-      </h1>
-      <div class="p">
-	<br>
-        {% if instruments %}
-        <table class="jb-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Extended Name</th>
-              <th>Description</th>
-	      <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for instrument in instruments %}
-            <tr>
-              <td>{{ instrument.name }}</td>
-              <td>{{ instrument.extended_name }}</td>
-              <td>{{ instrument.info }}</td>
-	      <td>
-		<button type="button" class="sled-delete-instrument jb-submit-button-1" data-form-url="{% url 'sled_instrument:instrument-delete' instrument.pk %}">
-		  <img src="{% static 'icons/trash.svg' %}">
-		  Delete
-		</button>
-		<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_instrument:instrument-update' instrument.pk %}">
-		  <img src="{% static 'icons/pencil.svg' %}">
-		  Update
-		</button>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% else %}
-        <p>
-          No instruments to show
-        </p>
-        {% endif %}
-	<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_instrument:instrument-add' %}">
-	  <img src="{% static 'icons/plus.svg' %}">
-	  Create new instrument
-	</button>
-	<br>
-	<br>
-      </div>
-    </div>
-
-    <div class="c c-admin">
-      <input class="accordion-checkbox" type="checkbox" id="bands">
-      <h1 class="jb-heading-2">
-	<label for="bands">
-	  Bands
-	</label>
-      </h1>
-      <div class="p">
-	<br>
-        {% if bands %}
-        <table class="jb-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Wavelength</th>
-              <th>Description</th>
-	      <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for band in bands %}
-            <tr>
-              <td>{{ band.name }}</td>
-              <td>{{ band.wavelength }}</td>
-              <td>{{ band.info }}</td>
-	      <td>
-		<button type="button" class="sled-delete-band jb-submit-button-1" data-form-url="{% url 'sled_band:band-delete' band.pk %}">
-		  <img src="{% static 'icons/trash.svg' %}">
-		  Delete
-		</button>
-		<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_band:band-update' band.pk %}">
-		  <img src="{% static 'icons/pencil.svg' %}">
-		  Update
-		</button>
-	      </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% else %}
-        <p>
-          No bands to show
-        </p>
-        {% endif %}
-	<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_band:band-add' %}">
-	  <img src="{% static 'icons/plus.svg' %}">
-	  Create new band
-	</button>
-	<br>
-	<br>
-      </div>
-    </div>
-
-
-
-    <div class="c c-admin">
-      <input class="accordion-checkbox" type="checkbox" id="admin-3">
-      <h1 class="jb-heading-2">
-	<label for="admin-3">
-	  Admin queries ({{N_queries}})
-	</label>
-      </h1>
-      <div class="p">
-	<br>
-	{% if N_queries %}
-	<table>
-          <thead>
-            <tr>
-	      <th>Name</th>
-	      <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for q in queries %}
-            <tr>
-	      <td><a href="{{ q.get_absolute_url }}">{{q.name}}</td>
-	      <td>{{q.description}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-	</table>
-	{% else %}
-	<p class="jb-paragraph-2">No queries to display</p>
-	{% endif %}
-	<a href="{% url 'sled_queries:queries-list-admin' %}">See all queries</a>
-	<br>
-	<br>
-      </div>
-    </div>
-
-    
-    <div class="c c-admin">
-      <input class="accordion-checkbox" type="checkbox" id="admin-4">
-      <h1 class="jb-heading-2">
-	<label for="admin-4">
-	  Admin collections
-	</label>
-      </h1>
-      <div class="p">
-	Dyo
-      </div>
-    </div>
-
-
-    <div class="c c-admin">
-      <input class="accordion-checkbox" type="checkbox" id="admin-5">
-      <h1 class="jb-heading-2">
-	<label for="admin-5">
-	  Message banner
-	</label>
-      </h1>
-      <div class="p">
-	<br>
-	<h2 class="jb-heading-2">Current/Future messages</h2>
-	{% if valid_messages %}
-	<div class=".jb-table-no-lines">
-	  <table class="jb-table">
-	    <thead>
-	      <tr>
-		<th>Tag</th>
-		<th>Created at<br>(Modified at)</th>
-		<th>Display period</th>
-		<th>Message</th>
-		<th></th>
-	      </tr>
-	    </thead>
-	    
-	    <tbody>
-	      {% for message in valid_messages %}
-	      <tr>
-		<td>{{ message.tag }}</td>
-		<td>{{ message.created_at }}<br>({{ message.modified_at }})</td>
-		<td>{{ message.from_date }}<br>{{ message.to_date }}</td>
-		<td>{{ message.message }}</td>
-		<td>
-		  <button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_persistent_message:message-update' message.pk %}">
-		    <img src="{% static 'icons/pencil.svg' %}">
-		    Update
-		  </button>
-		  <button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_persistent_message:message-delete' message.pk %}">
-		    <img src="{% static 'icons/trash.svg' %}">
-		    Delete
-		  </button>
-		</td>
-	      </tr>
-	      {% endfor %}
-	    </tbody>
-	  </table>
-	</div>
-	{% else %}
-	<p>
-	  No current or future messages
-	</p>
-	{% endif %}
-	<a href="{% url 'sled_persistent_message:message-list' %}">See all messages</a>
-	<br>
-	<br>
-      </div>
-    </div>
     
   </div>
 </div>
@@ -293,7 +52,7 @@
 
 
 {% block extrastyles %}
-<link href="{% static 'sled_users/css/sled_users.css' %}" rel="stylesheet" />
+<link href="{% static 'gerlumph_users/css/gerlumph_users.css' %}" rel="stylesheet" />
 {% endblock extrastyles %}
 
 
@@ -303,5 +62,5 @@
 <script nonce="{{request.csp_nonce}}">
   var hash = ("{{ hash }}");
 </script>
-<script type="text/javascript" src="{% static 'sled_users/js/user_admin.js' %}"></script>
+<script type="text/javascript" src="{% static 'gerlumph_users/js/user_admin.js' %}"></script>
 {% endblock extrascripts %}

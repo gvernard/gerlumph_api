@@ -1,0 +1,77 @@
+.c {
+  position: relative;
+  margin: 8px;
+}
+.c > input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  visibility: 0;
+}
+.c h1 {
+    color: black;
+    padding: 10px 20px 5px 20px;
+    position: relative;
+    border-radius: 8px;
+   -webkit-background-clip: padding-box; 
+    -moz-background-clip:    padding; 
+    background-clip:         padding-box;
+}
+.c-admin h1 {
+    background-color: #b8e6e6;
+}
+.c-user h1 {
+    background-color: #dfdfdf;
+}
+.c label::before {
+  content: "";
+  display: inline-block;
+  border: 10px solid transparent;
+  border-left: 10px solid black;
+  margin-right: 10px;
+}
+.c label {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.p {
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  padding: 0px 40px 0px; 20px;
+  margin: 0px 4px;
+}
+.accordion-checkbox:checked ~ h1 label::before {
+  border-left: 10px solid transparent;
+  border-top: 10px solid black;
+  margin-top: 12px;
+  margin-right: 10px;
+}
+
+.joined-on {
+    margin-bottom: 2px;
+}
+
+.slack-display-name {
+    width: 250px;
+}
+
+.white-bg {
+    background-color:white !important;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.padding-right {
+    padding-right: 10px;
+}

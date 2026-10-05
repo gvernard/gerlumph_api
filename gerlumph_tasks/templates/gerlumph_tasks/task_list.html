@@ -1,0 +1,129 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+{% block content %}
+{% include "modal_container_medium.html" %}
+
+<div class="jb-container">
+
+  <div id="tasks_recipient">
+    <h1 class="jb-heading-1">Tasks Addressed to
+      {% if admin_page %}
+      the Admins
+      {% else %}
+      Me
+      {% endif %}
+    </h1>
+
+    {% include "pagination_top.html" with qset=recipient request=request qset_range=recipient_range qset_total=N_recipient target="tasks_recipient" %}
+    {% include 'gerlumph_tasks/task_list_recipient.html' with recipient=recipient admin_page=admin_page %}
+    {% include "pagination_bottom.html" with qset=recipient request=request qset_range=recipient_range qset_total=N_recipient target="tasks_recipient" %}
+  </div>
+
+
+
+  
+  <div id="tasks_owned">
+    <h1 class="jb-heading-1">Tasks Initiated by
+      {% if admin_page %}
+      the Admins
+      {% else %}
+      Me
+      {% endif %}
+    </h1>
+
+    {% if N_old > 0 %}
+    <p class="jb-color-red">
+      You have {{N_old}} completed tasks that are more than 10 days old - please consider deleting them
+    </p>
+    {% endif %}
+    
+    {% include "pagination_top.html" with qset=owner request=request qset_range=owner_range qset_total=N_owner target="tasks_owned" %}
+
+    <div>
+      <table>
+	<thead>
+          <tr>
+            <th>Status</th>
+            <th>Task type</th>
+            <th>Created at</th>
+            <th>Recipients</th>
+            <th></th>
+          </tr>
+	</thead>
+	<tbody>
+          {% for task in owner %}
+          <tr>
+            <td>
+	      {% if task.status == "P" %}
+	      <span class="jb-bold jb-color-red">
+		{{ task.status }}
+	      </span>
+	      {% else %}
+	      <span class="jb-bold jb-color-green">
+		{{ task.status }}
+	      </span>
+	      {% endif %}
+	    </td>
+            <td>{{ task.task_type }}</td>
+            <td>{{ task.created_at }}</td>
+            <td>{{ task.recipients.all|join:", " }}</td>
+	    <td>
+	      {% if admin_page %}
+	      
+	      <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-detail-admin-owner' task.id %}">
+		<img src="{% static 'icons/eye-fill.svg' %}">
+		View
+	      </button>
+
+	      {% else %}
+
+	      <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-detail-owner' task.id %}">
+		<img src="{% static 'icons/eye-fill.svg' %}">
+		View
+	      </button>
+
+	      {% if task.status == 'C' %}
+	      <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-delete' task.id %}">
+		<img src="{% static 'icons/trash.svg' %}">
+		Delete
+	      </button>
+	      {% else %}
+	      <button type="button" id="view-task" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_tasks:tasks-delete' task.id %}">
+		<img src="{% static 'icons/x-circle-fill.svg' %}">
+		Cancel
+	      </button>
+	      {% endif %}
+	      
+	      {% endif %}
+	    </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">No tasks</td>
+          </tr>
+          {% endfor %}
+	</tbody>
+      </table>
+    </div>
+
+    {% include "pagination_bottom.html" with qset=owner request=request qset_range=owner_range qset_total=N_owner target="tasks_owned" %}
+
+  </div>
+
+
+  
+</div>
+{% endblock content %}
+
+
+{% block extrastyles %}
+<link href="{% static 'gerlumph_tasks/css/task_detail.css' %}" rel="stylesheet" />
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+<script type="text/javascript" src="{% static 'gerlumph_tasks/js/task_list.js' %}"></script>
+{% endblock extrascripts %}

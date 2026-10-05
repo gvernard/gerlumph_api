@@ -16,14 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 #from django.contrib.staticfiles import views
 #from django.views.generic import TemplateView
 
 urlpatterns = [
+    path('',RedirectView.as_view(pattern_name='gerlumph_registration:login',permanent=False)),
     path('admin/', admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path('captcha/', include('captcha.urls')),
     path('users/', include('gerlumph_users.urls'), name='gerlumph_users'),
     path('accounts/', include('gerlumph_registration.urls'), name='gerlumph_registration'),
+    path('limits/', include('gerlumph_limits.urls'), name='gerlumph_limits'),
+    path('tasks/', include('gerlumph_tasks.urls'), name='gerlumph_tasks'),
 ]
 

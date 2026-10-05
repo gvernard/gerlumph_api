@@ -1,0 +1,132 @@
+{% extends "modal_base.html" %}
+{% load static %}
+{% load project_tags %}
+
+
+{% block title %}
+<span class="highlight">{{task.task_type}}</span> -
+{% if task.status == "P" %}
+<span class="jb-bold jb-color-red">
+    Pending
+</span>
+{% else %}
+<span class="jb-bold jb-color-green">
+  Completed
+</span>
+{% endif %}
+{% endblock title %}
+
+
+{% block content %}
+<div class="jb-container-modal">
+
+  {% if db_response.response %}
+  <p>
+    <span class="jb-color-green">
+      You have responded to this task at: <b>{{ db_response.created_at }}</b>
+    </span>
+  </p>
+  {% endif %}
+  
+  <div class="jb-modal-field jb-table-no-lines">
+    
+    {% if task.task_type == 'AcceptNewUser' %}
+
+    <p>
+      A new user would like to register. Here are their details:
+    </p>
+    <table class="summary">
+      <tr>
+	<td>First name:</td>
+	<td>{{ task.owner.first_name }}</td>
+      </tr>
+      <tr>
+	<td>Last name:</td>
+	<td>{{ task.owner.last_name }}</td>
+      </tr>
+      <tr>
+	<td>Username:</td>
+	<td>{{ task.owner.username }}</td>
+      </tr>
+      <tr>
+	<td>Email:</td>
+	<td>{{ task.owner.email|urlize }}</td>
+      </tr>
+      <tr>
+	<td>Affiliation:</td>
+	<td>{{ task.owner.affiliation }}</td>
+      </tr>
+      <tr>
+	<td>Info:</td>
+	<td><i>"{{ task.owner.info }}"</i></td>
+      </tr>
+    </table>
+    <br>
+    <br>
+     
+    {% else %}
+    
+    <p>
+      {% if task.task_type == "CedeOwnership" %}
+      and would like to cede the ownership of the following <strong>{{object_type}}</strong> to you:
+      {% elif task.task_type == "DeleteObject" %}
+      and would like to delete the following <strong>{{object_type}}</strong>:
+      {% endif %}
+    </p>
+    
+    <div class="jb-modal-field jb-table-no-lines">
+      <table>
+	{% for obj in objects %}
+	<tr>
+	  <td class="padded">
+	    <a href="{{ obj.get_absolute_url }}" target="_blank">{{ obj }}</a>
+	  </td>
+	</tr>
+	{% endfor %}
+      </table>
+    </div>
+    
+    {% endif %}
+  </div>
+  
+  <p>
+    {% if task.task_type == "AcceptNewUser" %}
+    Do you accept this new user in GERLUMPH?
+    {% elif task.task_type == "CedeOwnership" %}
+    Would you like to accept or refuse taking up the ownership?
+    {% elif task.task_type == "DeleteObject" %}
+    Do you approve deleting {{objects|pluralize:"this,these"}} <strong>{{object_type}}</strong>?
+    {% endif %}
+  </p>
+  
+  <input type="hidden" name="task_id" value="{{ task.id }}">
+  
+  <div class="padded">
+    {{ form.response }}
+  </div>
+
+   <div class="invalid jb-modal-field">
+    <ul>
+      {% for error in form.response_comment.errors %}
+      <li>{{ error|safe }}</li>
+      {% endfor %}
+    </ul>
+   </div>
+   <div class="jb-modal-field padded">
+    {{ form.response_comment }}
+  </div>
+
+</div>
+{% endblock content %}
+
+
+{% block action_button %}
+{% if task.status == 'P' %}
+<button type="submit" class="jb-submit-button-1">Respond</button>
+{% endif %}
+{% endblock action_button %}
+
+
+{% block extrascripts %}
+<link href="{% static 'gerlumph_tasks/css/task_detail.css' %}" rel="stylesheet" />
+{% endblock extrascripts %}

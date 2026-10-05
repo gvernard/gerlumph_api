@@ -1,0 +1,33 @@
+{% extends "modal_base.html" %}
+{% load static %}
+
+
+{% block title %}
+Delete <strong>{{ task.task_type }}</strong> task
+{% endblock title %}
+
+
+{% block content %}
+<div class="jb-container-modal">
+  {% if task.status == 'C' %}
+  <p class="jb-color-green">
+    This task was completed on <strong>{{ task.completed_at }}</strong>.
+  </p>
+  {% else %}
+  <p class="jb-color-red">
+    This task was created on <strong>{{ task.created_at }}</strong> and still pending.
+  </p>  
+  {% endif %}
+  <p>
+    Are you sure you want to delete it?
+  </p>
+</div>
+{% endblock content %}
+
+
+{% block action_button %}
+<button type="submit" class="jb-submit-button-1">
+  <img src="{% static 'icons/trash.svg' %}" >
+  Delete
+</button>
+{% endblock action_button %}

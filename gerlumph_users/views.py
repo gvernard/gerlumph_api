@@ -10,18 +10,19 @@ from django.http import Http404
 from django.utils.translation import gettext as _
 from django.db.models import Q
 
-#from bootstrap_modal_forms.generic import (
-#    BSModalFormView,
-#    BSModalUpdateView,
-#    BSModalDeleteView,
-#    BSModalReadView,
-#)
+from bootstrap_modal_forms.generic import (
+    BSModalFormView,
+    BSModalUpdateView,
+    BSModalDeleteView,
+    BSModalReadView,
+)
 from operator import attrgetter
 from itertools import chain
 
 from gerlumph_users.models import Users
-#, MagMaps, ConfirmationTask
-from .forms import UsersSearchForm #,UserUpdateForm
+from gerlumph_tasks.models import Tasks
+#, MagMaps
+from .forms import UsersSearchForm,UserUpdateForm
 from .decorators import admin_access_only
 
 
@@ -142,23 +143,7 @@ class UserProfileView(TemplateView):
 
         #recipient = ConfirmationTask.custom_manager.all_as_recipient(self.request.user)
 
-        
-        # lenses_users_with_access = [None]*len(qset_lenses)
-        # lenses_groups_with_access = [None]*len(qset_lenses)
-        # for i,lens in enumerate(qset_lenses):
-        #     users_with_access = [u for u in lens.getUsersWithAccess(request.user)]
-        #     if users_with_access:
-        #         lenses_users_with_access[i] = ','.join(filter(None,[u.username for u in users_with_access]))
-        #     else:
-        #         lenses_users_with_access[i] = ''
-        #     groups_with_access = [g for g in lens.getGroupsWithAccess(request.user)]
-        #     if groups_with_access:
-        #         lenses_groups_with_access[i] = ','.join(filter(None,[g.name for g in groups_with_access]))
-        #     else:
-        #         lenses_groups_with_access[i] = ''
-
-
-
+ 
         context={'user':user,
                  #'pending_tasks':pending_tasks,
                  #'N_tasks': N_tasks,
@@ -170,15 +155,14 @@ class UserProfileView(TemplateView):
         return render(request, self.template_name, context=context)
 
     
-'''
+
 @method_decorator(login_required,name='dispatch')
 class UserUpdateView(BSModalUpdateView):
     model = Users
-    template_name = 'sled_users/user_update.html'
+    template_name = 'gerlumph_users/user_update.html'
     form_class = UserUpdateForm
     success_message = 'Success: your profile was updated.'
-    success_url = reverse_lazy('sled_users:user-profile')
-'''
+    success_url = reverse_lazy('gerlumph_users:user-profile')
 
 
 
@@ -192,28 +176,21 @@ class UserAdminView(TemplateView):
     def get(self, request, *args, **kwargs):
         user = request.user
 
-        
-        #if not (user.limitsandroles.is_admin or user.limitsandroles.is_super_admin):
-        #    return render(request,'404.html',status=404)
-        #else:
-
         admin = Users.getAdmin().first()
+        print(admin)
         
-        # get pending confirmation tasks
-        #pending_tasks = list(ConfirmationTask.custom_manager.pending_for_user(admin))
-        #N_tasks = len(pending_tasks)
-        #N_owned = ConfirmationTask.accessible_objects.owned(admin).count()
-        #N_recipient = ConfirmationTask.custom_manager.all_as_recipient(admin).count()
-        #N_tasks_all = N_owned + N_recipient
+        # get pending tasks
+        pending_tasks = list(Tasks.custom_manager.pending_for_user(admin))
+        N_tasks = len(pending_tasks)
+        N_owned = Tasks.custom_manager.all_as_owner_only(admin).count()
+        N_recipient = Tasks.custom_manager.all_as_recipient_only(admin).count()
+        N_tasks_all = N_owned + N_recipient
              
-        # Current and future persistent messages
-        #valid_messages = PersistentMessage.timeline.current() | PersistentMessage.timeline.future()
         context={'user': user,
                  'hash': self.kwargs.get('hash'),        # Open accordion div
                  'pending_tasks':pending_tasks,
                  'N_tasks': N_tasks,
                  'N_tasks_all': N_tasks_all,
-                 #'valid_messages': valid_messages,
                  'admin_page': True,
                  }
         return render(request, self.template_name, context=context)

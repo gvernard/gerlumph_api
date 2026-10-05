@@ -1,6 +1,6 @@
 import os
 from django import forms
-#from bootstrap_modal_forms.forms import BSModalModelForm, BSModalForm
+from bootstrap_modal_forms.forms import BSModalModelForm, BSModalForm
 from gerlumph_users.models import Users
 #from mysite.language_check import validate_no_profanity
 
@@ -20,34 +20,33 @@ class UsersSearchForm(forms.Form):
     page = forms.IntegerField(required=False,widget=forms.HiddenInput())
 
 
-'''
+
 class UserUpdateForm(BSModalModelForm):
 
     class Meta:
         model = Users
-        fields = ["first_name", "last_name", "email","affiliation", "homepage", "info"]
+        fields = ["first_name", "last_name", "email","affiliation", "info"]
         widgets = {
             "first_name": forms.TextInput({"placeholder":"your first name"}),
             "last_name": forms.TextInput({"placeholder":"your last name"}),
             "email": forms.TextInput({"placeholder":"your email"}),
             "affiliation": forms.TextInput({"placeholder":"your affiliation"}),
-            "homepage": forms.TextInput({"placeholder":"your homepage"}),
             "info": forms.Textarea({"placeholder":"your info"}),
         }
 
     def clean_first_name(self):
         data = self.cleaned_data["first_name"]
-        validate_no_profanity(data)
+        #validate_no_profanity(data)
         return data
 
     def clean_last_name(self):
         data = self.cleaned_data["last_name"]
-        validate_no_profanity(data)
+        #validate_no_profanity(data)
         return data
 
     def clean_info(self):
         data = self.cleaned_data["info"]
-        validate_no_profanity(data)
+        #validate_no_profanity(data)
         return data
 
     def clean(self):
@@ -57,4 +56,3 @@ class UserUpdateForm(BSModalModelForm):
 
             
         return
-'''

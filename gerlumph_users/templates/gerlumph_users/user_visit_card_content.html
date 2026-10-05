@@ -14,19 +14,18 @@
 	<p>
 	  Joined on {{ gerlumph_user.date_joined }}, last login {{ gerlumph_user.last_login|timesince }} ago
 	</p>
+
+      </td>
+      <td valign="middle" align="right">
 	<span class="jb-important-text roles">
 	  {{ gerlumph_user.get_roles }}
 	</span>
-
 	{% if request.user.limitsandroles.is_super_admin %}
-	<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'sled_limits:limits-and-roles-update' gerlumph_user.pk %}">
+	<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_limits:limits-and-roles-update' gerlumph_user.pk %}">
 	  <img src="{% static 'icons/cloud-arrow-down-fill.svg' %}">
 	  Change limits and roles
 	</button>
 	{% endif %}
-      </td>
-      <td valign="bottom" align="right">
-	<img src="{{ gerlumph_user.avatar }}" loading="lazy" width="100" alt="" class="jb-avatar" />
       </td>
     </tr>
   </table>
@@ -41,7 +40,7 @@
           <th>Last name</th>
           <th>Affiliation</th>
           <th>Email</th>
-          <th>Homepage</th>
+          <th>Info</th>
         </tr>
       </thead>
       <tbody>
@@ -50,18 +49,6 @@
           <td>{{ gerlumph_user.last_name }}</td>
           <td>{{ gerlumph_user.affiliation }}</td>
           <td>{{ gerlumph_user.email|urlize }}</td>
-          <td>{{ gerlumph_user.homepage|urlize }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <thead>
-        <tr>
-          <th>Info</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
           <td>{{ gerlumph_user.info }}</td>
         </tr>
       </tbody>

@@ -1,0 +1,73 @@
+{% extends "modal_base.html" %}
+{% load static %}
+
+
+{% block title %}
+<span class="highlight">{{task.task_type}}</span> -
+{% if task.status == "P" %}
+<span class="jb-bold jb-color-red">
+    Pending
+</span>
+{% else %}
+<span class="jb-bold jb-color-green">
+  Completed
+</span>
+{% endif %}
+{% endblock title %}
+
+
+{% block content %}
+{% include "modal_container_wide.html" %}
+
+<div class="jb-container-modal">
+
+  <div class="jb-modal-field jb-table-no-lines">    
+    On <strong>{{ task.created_at }}</strong> ({{ task.created_at|timesince }} ago) user <strong>{{task.owner}}</strong> said:
+    <div class="original-message">
+      <span class="align-center jb-italic">
+	&ldquo;{{ task.cargo.comment }}&rdquo;
+      </span>
+    </div>
+    
+    <p>
+      {% if task.task_type == "CedeOwnership" %}
+      and requested from {{ task.recipients.all|pluralize:"user,users" }} <strong>{{ task.recipients.all|join:"," }}</strong> to take up the ownership of the following <strong>{{object_type}}</strong>:
+      {% elif task.task_type == "DeleteObject" %}
+      and requested from the <strong>administrators</strong> to delete the following <strong>{{object_type}}</strong>:
+      {% endif %}
+    </p>
+
+    <div class="jb-modal-field jb-table-no-lines">
+      <table>
+	{% for obj in objects %}
+	<tr>
+	  <td class="padded">
+	    <a href="{{ obj.get_absolute_url }}" target="_blank">{{ obj }}</a>
+	  </td>
+	</tr>
+	{% endfor %}
+      </table>
+    </div>
+  </div>
+
+  <div class="jb-modal-field jb-table-no-lines">
+    <table class="responses">
+      {% for response in responses %}
+      {% if response.response != '' %}
+      <tr><td>&bull; <strong>{{ response.name }}</strong> responded on <strong>{{response.created_at}}</strong> ({{ response.created_at|timesince }} ago) with:</td></tr>
+      <tr><td class="padded">
+	  {{ response.response|upper }} - 
+	  <span class="align-right jb-italic">
+	    &ldquo;{{ response.response_comment }}&rdquo;
+	  </span>
+      </td></tr>
+      {% else %}
+      <tr><td>&bull; <strong>{{ response.name }}</strong> <span class="jb-color-red">has not responded yet</span></td></tr>
+      {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+
+</div>  
+{% endblock content %}
