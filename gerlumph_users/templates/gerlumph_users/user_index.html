@@ -90,23 +90,21 @@
 
 
     <div class="c c-user">
-      <input class="accordion-checkbox" type="checkbox" id="lenses">
+      <input class="accordion-checkbox" type="checkbox" id="downloads">
       <h1 class="jb-heading-2">
-	<label for="lenses">
-	  My Downloads ({{ N_lenses_total }})
+	<label for="downloads">
+	  My Downloads ({{ N_downloads_total }})
 	</label>
       </h1>
       <div class="p">
 
-	<form id="lenses-form" class="ids-form" method="POST">
+	<form id="downloads-form" class="ids-form" method="POST">
           {% csrf_token %}
 
 	  <div>
-	    {% include "pagination_top.html" with qset=lenses request=request qset_range=lenses_range qset_total=N_lenses_total target="lenses" %}
-	    {% comment %}
-	    {% include "lenses/lens_list_executive.html" with lenses=lenses %}
-	    {% endcomment %}
-	    {% include "pagination_bottom.html" with qset=lenses request=request qset_range=lenses_range qset_total=N_lenses_total target="lenses" %}
+	    {% include "pagination_top.html" with qset=downloads request=request qset_range=down_range qset_total=N_downloads_total target="downloads" %}
+	    {% include "gerlumph_downloads/download_list.html" with downloads=downloads %}
+	    {% include "pagination_bottom.html" with qset=downloads request=request qset_range=downloads_range qset_total=N_downloads_total target="downloads" %}
 	  </div>
 
 	  {% comment %}

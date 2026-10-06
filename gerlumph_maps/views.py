@@ -19,9 +19,9 @@ class MapDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['icon'] = self.object.get_icon_url()
-        context['sample'] = self.object.get_sample_url()
-        context['mpd'] = self.object.get_mpd_url()
+        context['icon'] = self.object.get_file_url("icon.png")
+        context['sample'] = self.object.get_file_url("sample.png")
+        context['mpd'] = self.object.get_file_url("mpd.png")
 
         return context
 

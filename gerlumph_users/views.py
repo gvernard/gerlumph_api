@@ -21,7 +21,8 @@ from itertools import chain
 
 from gerlumph_users.models import Users
 from gerlumph_tasks.models import Tasks
-#, MagMaps
+from gerlumph_downloads.models import Downloads
+
 from .forms import UsersSearchForm,UserUpdateForm
 from .decorators import admin_access_only
 
@@ -124,32 +125,17 @@ class UserProfileView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-
-        # get pending confirmation tasks
-        #pending_tasks = list(ConfirmationTask.custom_manager.pending_for_user(user).exclude(task_type__in=['AcceptNewUser']))
-        #N_tasks = len(pending_tasks)
-   
-        # Get owned objects
-        owned_objects = user.getOwnedObjects()
-
-        '''
-        # Paginator for magmaps
-        ordered_lenses = owned_objects["Lenses"].order_by('-created_at')
-        lenses_paginator = Paginator(ordered_lenses,50)
-        lenses_page_number = request.GET.get('lenses-page',1)
-        lenses_page = lenses_paginator.get_page(lenses_page_number)
-        '''
         
-
-        #recipient = ConfirmationTask.custom_manager.all_as_recipient(self.request.user)
-
+        # Paginator for downloads
+        ordered_downloads = Downloads.objects.filter( Q(owner=user) ).order_by('-created_at')
+        down_paginator = Paginator(ordered_downloads,50)
+        down_page_number = request.GET.get('downloads-page',1)
+        down_page = down_paginator.get_page(down_page_number)
  
         context={'user':user,
-                 #'pending_tasks':pending_tasks,
-                 #'N_tasks': N_tasks,
-                 #'lenses_range': lenses_paginator.page_range,
-                 #'lenses': lenses_page,
-                 #'N_imagings_total': imagings_paginator.count,
+                 'downloads_range': down_paginator.page_range,
+                 'downloads': down_page,
+                 'N_downloads_total': down_paginator.count,
                  'admin_page': False,
                  }
         return render(request, self.template_name, context=context)

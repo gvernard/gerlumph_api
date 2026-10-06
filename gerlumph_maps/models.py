@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.files.storage import storages
+from django.urls import reverse, reverse_lazy
 
 my_storage = storages["s3bucket"]
 
@@ -44,19 +45,13 @@ class MagMaps(models.Model):
         ordering = ["-id"]
         
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     def get_absolute_url(self):
         return reverse('gerlumph_maps:map-detail',kwargs={'pk':self.id})
 
-    def get_icon_url(self):
-        url = my_storage.url(str(self.id) + "/icon.png")
+    def get_file_url(self,filename):
+        # filename must contain the extension
+        url = my_storage.url(str(self.id) + "/" + filename)
         return url
 
-    def get_sample_url(self):
-        url = my_storage.url(str(self.id) + "/sample.png")
-        return url
-
-    def get_mpd_url(self):
-        url = my_storage.url(str(self.id) + "/mpd.png")
-        return url

@@ -52,32 +52,6 @@ class Users(AbstractUser,GuardianUserMixin):
 
     def get_absolute_url(self):
         return reverse('gerlumph_users:user-visit-card',kwargs={'username':self.username})
-
-    
-    def getOwnedObjects(self,user_object_types=None):
-        """
-        Provides access to all the objects that the user owns, arranged by type.
-
-        Args:
-            user_object_types (optional[List[str]]): A list of strings matching the names of the primary model database tables.
-            The list is filtered to keep only those provided names that indeed correspond to primary models.
-            If `None` then all the primary models are used.
-
-        Returns:
-            dict: The keys are the same as the filtered input object_types, or the entire list of `objects_with_owner`.
-            The values are `QuerySets` corresponding to a query in each primary model table with the owner_id set to this user.
-        """
-        if user_object_types == None:
-            filtered_object_types = objects_with_owner
-        else:
-            filtered_object_types = [x for x in user_object_types if x in objects_with_owner]
-        objects = {}
-        for table in filtered_object_types:
-            #model_ref = apps.get_model(app_label='lenses',model_name=table)
-            #objects[table] = model_ref.accessible_objects.owned(self)
-            objects[table] = []
-        return objects
-
     
     
     def checkOwnsList(self,objects):

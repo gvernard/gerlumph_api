@@ -31,5 +31,6 @@ urlpatterns = [
     path('tasks/', include('gerlumph_tasks.urls'), name='gerlumph_tasks'),
     path('maps/', include('gerlumph_maps.urls'), name='gerlumph_maps'),
     path('downloads/', include('gerlumph_downloads.urls'), name='gerlumph_downloads'),
+    path('api/', include('api.urls'), name='api'),
 ]
 

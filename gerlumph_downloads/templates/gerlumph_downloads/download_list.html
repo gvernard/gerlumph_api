@@ -1,0 +1,30 @@
+<!-- {% csrf_token %} -->
+
+<div>
+  <input name="obj_type" type="hidden" value="Downloads" />
+  <table class="items-list">
+    <thead>
+      <tr>
+	<th>ID</th>
+        <th>Date</th>
+        <th># Maps</th>
+        <th>Maps</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for down in downloads %}
+      <tr>
+	<td><a href="{% url 'gerlumph_downloads:download-detail' down.id %}">{{ down.id }}</a></td>
+        <td>{{ down.created_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ down.maps.all|length }}</td>
+        <td>
+	  {% for map in down.maps.all %}
+	  <a href="{{ map.get_absolute_url }}">{{map.id}}</a>
+	  {% if not forloop.last %} , {% endif %}
+	  {% endfor %}
+	</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
