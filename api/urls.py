@@ -7,4 +7,5 @@ from . import views
 app_name = 'api'
 urlpatterns = [
     path('fetch-maps/',views.FetchMapLinks.as_view(), name="fetch-maps"),
+    path('query-single-map/',views.QuerySingleMap.as_view(), name="query-single-map"),
 ]
