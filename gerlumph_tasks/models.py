@@ -175,8 +175,8 @@ class Tasks(models.Model):
             recipients (`QuerySet`): A queryset of User objects.
         """
         site = Site.objects.get_current()
-        subject = 'SLED: Response to %s task required' % self.task_type
-        from_email = 'sled-no-reply@sled.amnh.org'
+        subject = 'GERLUMPH: Response to %s task required' % self.task_type
+        from_email = 'gerlumph-no-reply@gerlumph.amnh.org'
         
         for user in users:
             html_message = get_template('emails/task_notification.html')
