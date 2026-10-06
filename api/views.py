@@ -16,7 +16,7 @@ class FetchMapLinks(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def post(self,request):
-        serializer = MapIdsSerializer(data=request.data)
+        serializer = MapIdsSerializer(data=request.data,context={"user":request.user})
         if serializer.is_valid():
             maps = serializer.validated_data["ids"]
 

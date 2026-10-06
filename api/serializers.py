@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from gerlumph_maps.models import MagMaps
 
 
@@ -35,15 +36,26 @@ class ModelInstanceListField(serializers.ListField):
             raise serializers.ValidationError(
                 f"The following IDs do not exist in the database: [{missing_str}]. Contact the admins!"
             )
-
-
-        
-
         
         return instances
+
 
     
 class MapIdsSerializer(serializers.Serializer):
     ids = ModelInstanceListField(
         queryset=MagMaps.objects.all(),
     )
+    
+    def validate(self, data):
+        ### Check user limits
+
+        if self.context['user']:
+            N_maps = len(data.get("ids"))
+            check = self.context['user'].limitsandroles.check_all_limits(N_maps)
+            if check["errors"]:
+                for error in check["errors"]:
+                    raise serializers.ValidationError(error)
+        else:
+            raise serializers.ValidationError("User is not defined, something went wrong!")
+                
+        return data

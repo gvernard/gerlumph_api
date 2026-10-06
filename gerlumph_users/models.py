@@ -53,29 +53,7 @@ class Users(AbstractUser,GuardianUserMixin):
     def get_absolute_url(self):
         return reverse('gerlumph_users:user-visit-card',kwargs={'username':self.username})
     
-    
-    def checkOwnsList(self,objects):
-        """
-        Finds any objects in the given list that are not owned by the user.
-
-        Args:
-            objects(List[SingleObject]): A list of primary objects of a specific type.
-
-        Raises:
-            AssertionError: If the provided list contains objects that the user does not own.
-        """
-        not_owned = []
-        for obj in objects:
-            if not obj.isOwner(self):
-                not_owned.append(obj)
-        try:
-            assert (len(not_owned) == 0), "User "+self.username+" is NOT the owner of "+str(len(not_owned))+" objects in the list."
-        except AssertionError as error:
-            caller = inspect.getouterframes(inspect.currentframe(),2)
-            print(error,"The operation of '"+caller[1][3]+"' should not proceed")
-            raise
-
-        
+           
     def cedeOwnership(self,objects,heir,justification=None):
         """
         Changes the owner of the given objects to the heir.
@@ -156,45 +134,3 @@ class Users(AbstractUser,GuardianUserMixin):
             return pending_tasks
         else:
             return []
-
-        
-    '''
-    def check_all_limits(self,N,obj_type='all'):
-        remaining = {
-            "errors": []
-        }
-        #print(N,obj_type)
-        N_remaining_day = self.check_limit_day(N,obj_type)
-        if N_remaining_day < 0:
-            remaining["errors"].append('You have exceeded the limit of daily downloads! Contact the admins.')
-        else:
-            remaining["N_remaining_day"] = N_remaining_day
-        
-        N_remaining_week = self.check_limit_week(N,obj_type)
-        if N_remaining_week < 0:
-            remaining["errors"].append('You have exceeded the limit of weekly downloads! Wait for a max. of 7 days, or contact the admins.')
-        else:
-            remaining["N_remaining_week"] = N_remaining_week
-
-        return remaining
-    
-        
-    def check_limit_day(self,N):
-        downloads = Downloads.accessible_objects.owned(self)
-        N_maps = 0
-        for i,down in owned_objects.items():
-            N_owned = N_owned + qset.count()
-        remaining = self.limitsandroles.limit_total_owned - N_owned - N
-        return remaining
-
-        
-    def check_limit_week(self,N,obj_type='all'):
-        owned_objects = self.getOwnedObjects()
-        N_week = 0
-        last_seven_days = timezone.now() - timezone.timedelta(days=7)
-        for model_type,qset in owned_objects.items():
-            N_week = N_week + qset.filter(created_at__gt=last_seven_days).count()
-        remaining = self.limitsandroles.limit_add_per_week - N_week - N
-        return remaining
-    '''
-
