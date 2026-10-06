@@ -1,4 +1,9 @@
 from django.db import models
+from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.files.storage import storages
+
+my_storage = storages["s3bucket"]
 
 # Create your models here.
 class MagMaps(models.Model):
@@ -10,10 +15,27 @@ class MagMaps(models.Model):
         validators=[MinValueValidator(0,"This limit cannot be negative"),
                     MaxValueValidator(100000,"This is the upper limit of map ids.")])
 
-    # kappa
-    # gamma
-    # s
-
+    kappa = models.DecimalField(blank=False,
+                                max_digits=10,
+                                decimal_places=5,
+                                verbose_name="Kappa",
+                                help_text="The convergence of the map.",
+                                validators=[MinValueValidator(0.0,"Kappa must be positive."),
+                                         MaxValueValidator(10.0,"Kappa must be less than 10.")])
+    gamma = models.DecimalField(blank=False,
+                                max_digits=10,
+                                decimal_places=5,
+                                verbose_name="Shear",
+                                help_text="The shear of the map.",
+                                validators=[MinValueValidator(0.0,"Shear must be positive."),
+                                            MaxValueValidator(10.0,"Shear must be less than 10.")])
+    s = models.DecimalField(blank=False,
+                            max_digits=10,
+                            decimal_places=5,
+                            verbose_name="Smooth matter fraction",
+                            help_text="The smooth matter fraction of the map.",
+                            validators=[MinValueValidator(0,"Smooth matter fraction must be greater than or equal to zero."),
+                                        MaxValueValidator(1,"Smooth matter fraction must be less than unity.")])
 
     class Meta():
         db_table = "maps"
@@ -27,15 +49,14 @@ class MagMaps(models.Model):
     def get_absolute_url(self):
         return reverse('gerlumph_maps:map-detail',kwargs={'pk':self.id})
 
-
     def get_icon_url(self):
-        icon = 'icon'
-        return icon
+        url = my_storage.url(str(self.id) + "/icon.png")
+        return url
 
     def get_sample_url(self):
-        sample = 'sample'
-        return sample
+        url = my_storage.url(str(self.id) + "/sample.png")
+        return url
 
     def get_mpd_url(self):
-        mpd = 'mpd'
-        return mpd
+        url = my_storage.url(str(self.id) + "/mpd.png")
+        return url

@@ -4,25 +4,25 @@
 {% block content %}
 <div class="jb-container">
  
-  <div>
-    {{ map.id }}
-    KAPPA
-    GAMMA
-    ETC
-  </div>
-
 
   <div>
-    <table>
+    <table class="jb-table-no-lines">
+      <tr>
+	<td colspan="3"><h2>Map ID: {{ map.id }}</h2></td>
+      <tr>
       <tr>
 	<td>
-	  <img src="{{ icon }}" alt="icon" />
+	  <table class="jb-table-no-lines">
+	    <tr><td>&kappa;:</td><td>{{ map.kappa }}</td></tr>
+	    <tr><td>&gamma;:</td><td>{{ map.gamma }}</td></tr>
+	    <tr><td>s:</td><td>{{ map.s }}</td></tr>
+	  </table>
 	</td>
-	<td>
-	  <img src="{{ sample }}" alt="sample" />
-	</td>	
-	<td>
-	  <img src="{{ mpd }}" alt="mpd" />
+	<td valign="middle">
+	  <a href="{{ sample }}"><img src="{{ icon }}" alt="icon" /></a>
+	</td>
+	<td valign="middle">
+	  <img width="350px" src="{{ mpd }}" alt="mpd" />
 	</td>	
       </tr>
     </table>
