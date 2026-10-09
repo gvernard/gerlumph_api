@@ -38,6 +38,41 @@ class MagMaps(models.Model):
                             validators=[MinValueValidator(0,"Smooth matter fraction must be greater than or equal to zero."),
                                         MaxValueValidator(1,"Smooth matter fraction must be less than unity.")])
 
+    res = models.IntegerField(blank=False,
+                              verbose_name="Resolutiion",
+                              help_text="The map resolution in pixels (assumes square maps).",
+                              validators=[MinValueValidator(0,"Resolution must be greater than unity.")])
+    width = models.DecimalField(blank=False,
+                                max_digits=10,
+                                decimal_places=5,
+                                verbose_name="Width",
+                                help_text="The width of the map in units of the Einstein radius (assumes square maps).",
+                                validators=[MinValueValidator(0,"Width must be greater than unity.")],)
+    
+    mu_avg = models.DecimalField(blank=False,
+                                 max_digits=10,
+                                 decimal_places=5,
+                                 verbose_name="Avg. magnification",
+                                 help_text="The average magnification of the map.")
+    N_avg = models.DecimalField(blank=False,
+                                max_digits=10,
+                                decimal_places=5,
+                                verbose_name="Avg. number of rays",
+                                help_text="The average number of rays per pixel.",
+                                validators=[MinValueValidator(0,"Average number of rays must be greater than unity.")],)
+
+    N_lenses = models.IntegerField(blank=False,
+                                   verbose_name="Number of lenses",
+                                   help_text="The number of lenses used to produce the map.",
+                                   validators=[MinValueValidator(0,"Number of lenses must be greater than unity.")])
+    t_tot = models.DecimalField(blank=False,
+                                max_digits=10,
+                                decimal_places=5,
+                                verbose_name="Time",
+                                help_text="The total time that was required to produce the map.",
+                                validators=[MinValueValidator(0,"Time must be greater than zero.")],)
+
+    
     class Meta():
         db_table = "maps"
         verbose_name = "map"
