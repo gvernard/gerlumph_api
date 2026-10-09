@@ -34,16 +34,18 @@ class QuerySingleMap(APIView):
                     output_field=FloatField()
                 ),
             ).annotate(
-                ds=Abs(F('s')-s0,output_field=FloatField()),
+                ds=Abs(
+                    F('s')-s0,
+                    output_field=FloatField()
+                ),
             ).filter(
                 dkg__lt=dkg_tol
             ).order_by(
                 'dkg','ds'
             )
 
-   
-            if match_qset:
-                map_obj = match_qset.first()
+            map_obj = match_qset.first()
+            if map_obj:
                 mymap = {}
                 mymap["id"] = map_obj.id
                 mymap["k"] = map_obj.kappa
@@ -51,6 +53,8 @@ class QuerySingleMap(APIView):
                 mymap["s"] = map_obj.s
                 mymap["ds"] = map_obj.ds
                 mymap["dkg"] = map_obj.dkg
+                mymap["res"] = map_obj.res
+                mymap["width"] = map_obj.width
                 return Response({"map": mymap,"message": "success"}, status=status.HTTP_200_OK)
             else:
                 return Response({"map": '', "message": "No map found close enough."}, status=status.HTTP_200_OK)
