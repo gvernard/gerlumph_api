@@ -51,7 +51,7 @@ class QuerySingleMap(APIView):
                 mymap["s"] = map_obj.s
                 mymap["ds"] = map_obj.ds
                 mymap["dkg"] = map_obj.dkg
-                return Response({"map": mymap,"message":"success"}, status=status.HTTP_200_OK)
+                return Response({"map": mymap,"message": "success"}, status=status.HTTP_200_OK)
             else:
                 return Response({"map": '', "message": "No map found close enough."}, status=status.HTTP_200_OK)
         else:
@@ -69,16 +69,18 @@ class FetchMapLinks(APIView):
         if serializer.is_valid():
             maps = serializer.validated_data["ids"]
 
-            links = []
+            map_links = []
+            meta_links = []
             for mappa in maps:
-                links.append( mappa.get_file_url("map.bin") )
-                links.append( mappa.get_file_url("mapmeta.dat") )
+                map_links.append( mappa.get_file_url("map.bin") )
+                meta_links.append( mappa.get_file_url("mapmeta.dat") )
 
 
             new_download = Downloads.objects.create(owner=request.user)
             new_download.maps.set(maps)            
                 
-            return Response({"links": links}, status=status.HTTP_200_OK)
+            return Response({"map_links": map_links,"meta_links": meta_links, "message": "success"}, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            error = serializer.errors["ids"]
+            return Response({"map_links": '',"meta_links": '', "message": error},status=status.HTTP_400_BAD_REQUEST)
  
