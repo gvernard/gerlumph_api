@@ -6,7 +6,7 @@ from gerlumph_maps.models import MagMaps
 class QuerySingleMapSerializer(serializers.Serializer):
     k = serializers.FloatField(min_value=0.0)
     g = serializers.FloatField(min_value=0.0)
-    s = serializers.FloatField(min_value=0.0,max_value=1.0)
+    s = serializers.FloatField(min_value=0.0)#,max_value=1.0
     dkg_tol = serializers.FloatField(required=False,default=0.5)
     ds_tol = serializers.FloatField(required=False,default=1.0)
     

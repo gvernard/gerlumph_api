@@ -41,6 +41,7 @@ class QuerySingleMap(APIView):
                 'dkg','ds'
             )
 
+   
             if match_qset:
                 map_obj = match_qset.first()
                 mymap = {}
@@ -48,9 +49,11 @@ class QuerySingleMap(APIView):
                 mymap["k"] = map_obj.kappa
                 mymap["g"] = map_obj.gamma
                 mymap["s"] = map_obj.s
-                return Response({"map": mymap}, status=status.HTTP_200_OK)
+                mymap["ds"] = map_obj.ds
+                mymap["dkg"] = map_obj.dkg
+                return Response({"map": mymap,"message":"success"}, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "No map found close enough."}, status=status.HTTP_200_OK)
+                return Response({"map": '', "message": "No map found close enough."}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
