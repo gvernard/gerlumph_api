@@ -14,6 +14,19 @@ from .serializers import MapIdsSerializer, QuerySingleMapSerializer
 
 
 
+class HealthCheck(APIView):
+    authentication_classes = [authentication.SessionAuthentication,authentication.BasicAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self,request):
+        #try:
+        #    connection.ensure_connection()
+        #except Exception:
+        #    return JsonResponse({"status": "unhealthy", "database": "down"}, status=500)
+        return Response({"status": "healthy"}, status=200)
+
+
+
 class QuerySingleMap(APIView):
     authentication_classes = [authentication.SessionAuthentication,authentication.BasicAuthentication]
     permission_classes = [permissions.IsAuthenticated]
