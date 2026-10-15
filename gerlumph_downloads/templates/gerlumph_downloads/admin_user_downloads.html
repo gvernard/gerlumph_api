@@ -1,0 +1,60 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="jb-container">
+
+
+  <div class="c c-user">
+    <h1 class="jb-heading-2">
+      <label for="downloads">
+	Downloads for user <b>{{ other_user.username }}</b>
+      </label>
+    </h1>
+
+
+    
+    <div class="p">
+      <br>
+      <br>
+      
+      <div class="activity-chart">
+	<p>
+	  Activity in the current year
+	</p>
+	{% if plot %}
+	<img src="data:image/png;base64,{{ plot }}" alt="Matplotlib Chart">
+	{% else %}
+	<p>No chart data available.</p>
+	{% endif %}
+      </div>
+      
+      
+      <form id="downloads-form" class="ids-form" method="POST">
+        {% csrf_token %}
+	
+	<div>
+	  {% include "pagination_top.html" with qset=downloads request=request qset_range=down_range qset_total=N_downloads_total target="downloads" %}
+	  {% include "gerlumph_downloads/download_list.html" with downloads=downloads %}
+	  {% include "pagination_bottom.html" with qset=downloads request=request qset_range=downloads_range qset_total=N_downloads_total target="downloads" %}
+	</div>
+	
+      </form>
+      <br>
+      <br>
+    </div>
+
+
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block extrastyles %}
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+{% endblock extrascripts %}

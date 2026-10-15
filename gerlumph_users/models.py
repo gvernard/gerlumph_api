@@ -15,7 +15,16 @@ import inspect
 
 #from . import SingleObject, ConfirmationTask
 
-#from gerlumph_downloads.models import Downloads
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import io
+import base64
+from django.db.models.functions import ExtractWeek, ExtractIsoWeekDay
+matplotlib.use('Agg')  # Prevents headless server GUI errors
+
+
 
 objects_with_owner = ["MagMaps","ConfirmationTask"]
 
@@ -110,6 +119,65 @@ class Users(AbstractUser,GuardianUserMixin):
             return ''
 
 
+
+    def get_contribution_plot(self,qset_downloads=None):
+        # 1. Generate 52 weeks of dummy data (7 days a week)
+        #np.random.seed(42)
+        #grid = np.random.choice([0, 1, 2, 4, 8], size=(7, 52), p=[0.5, 0.2, 0.15, 0.1, 0.05])
+
+        if qset_downloads == None:
+            from gerlumph_downloads.models import Downloads
+            qset_downloads = Downloads.objects.filter( Q(owner=self) ).order_by('-created_at')
+
+        
+        qset = qset_downloads.annotate(
+            week=ExtractWeek("created_at"), weekday=ExtractIsoWeekDay("created_at")
+        ).values("week", "weekday").annotate(count=Count("maps")).order_by('week','weekday')
+        
+        unique_weeks = sorted(list(set(entry["week"] for entry in qset)))
+        #week_to_idx = {week: idx for idx, week in enumerate(unique_weeks)}
+        grid = np.array( [[0 for _ in range(52)] for _ in range(7)] )
+        
+        for entry in qset:
+            #w_idx = week_to_idx[entry["week"]]
+            w_idx = entry["week"]
+            d_idx = entry["weekday"] - 1
+            grid[d_idx][w_idx] = entry["count"]
+                
+                
+        n_colors = np.max(grid) + 1
+        cmap = matplotlib.colormaps['Purples']
+        colors = cmap(np.linspace(0, 1, n_colors))
+        colors = [ matplotlib.colors.to_hex(color) for color in colors ]
+        
+        #print(grid.shape)
+        #print(n_colors)
+        #print(grid)
+        
+        
+        plt.figure(figsize=(12, 2))
+        ax = sns.heatmap(
+            grid,
+            cmap=colors,
+            cbar=False,
+            linewidths=2,
+            linecolor='white',
+            square=True
+        )
+        
+        ax.set_yticklabels(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], rotation=0)
+        #ax.set_xticklabels([]) # Hide week numbers
+        
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', bbox_inches='tight')
+        buf.seek(0)
+        string = base64.b64encode(buf.read())
+        uri = string.decode('utf-8')
+        
+        return uri
+    
+
+        
     
 
     ####################################################################

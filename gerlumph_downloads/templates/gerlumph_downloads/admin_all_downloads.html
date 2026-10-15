@@ -1,0 +1,72 @@
+{% extends 'master_header.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="jb-container">
+ <!-- {% csrf_token %} -->
+
+
+ <div class="c c-user">
+   <h1 class="jb-heading-2">
+     <label for="downloads">
+       All Downloads
+     </label>
+   </h1>
+
+   
+   <div class="p">
+     <form id="downloads-form" class="ids-form" method="POST">
+       {% csrf_token %}
+       
+       <div>
+	 {% include "pagination_top.html" with qset=downloads request=request qset_range=down_range qset_total=N_downloads_total target="downloads" %}
+
+
+	 <div>
+	   <table class="items-list">
+	     <thead>
+	       <tr>
+		 <th>User</th>
+		 <th>Total maps</th>
+		 <th>Activity</th>
+	       </tr>
+	     </thead>
+	     <tbody>
+	       {% for user,N,downs in zipped_user_downs %}
+	       <tr>
+		 <td><a href="{% url 'gerlumph_downloads:admin-download-user' user.id %}">{{ user.username }}</a></td>
+		 <td>{{ N }}</td>
+		 <td>
+		   {% if downs %}
+		   <img src="data:image/png;base64,{{ user.get_contribution_plot }}" alt="Matplotlib Chart">
+		   {% else %}
+		   <p>No chart data available.</p>
+		   {% endif %}
+		 </td>
+	       </tr>
+	       {% endfor %}
+	     </tbody>
+	   </table>
+	 </div>
+
+
+	 {% include "pagination_bottom.html" with qset=downloads request=request qset_range=downloads_range qset_total=N_downloads_total target="downloads" %}
+       </div>
+       
+   </div>
+       
+
+
+ </div>
+</div>
+{% endblock content %}
+
+
+{% block extrastyles %}
+{% endblock extrastyles %}
+
+
+{% block extrascripts %}
+{% endblock extrascripts %}

@@ -20,11 +20,17 @@
 	<span class="jb-important-text roles">
 	  {{ gerlumph_user.get_roles }}
 	</span>
-	{% if request.user.limitsandroles.is_super_admin %}
+	{% if request.user.limitsandroles.is_admin %}
 	<button type="button" class="sled-modal jb-submit-button-1" data-form-url="{% url 'gerlumph_limits:limits-and-roles-update' gerlumph_user.pk %}">
 	  <img src="{% static 'icons/cloud-arrow-down-fill.svg' %}">
 	  Change limits and roles
 	</button>
+	<a href="{% url 'gerlumph_downloads:admin-download-user' gerlumph_user.pk %}">
+	  <button type="button" class="jb-submit-button-1">
+	    <img src="{% static 'icons/cloud-arrow-down-fill.svg' %}">
+	    View downloads
+	  </button>
+	</a>
 	{% endif %}
       </td>
     </tr>

@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.utils.decorators import method_decorator
 from django.http import Http404
 from django.utils.translation import gettext as _
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from bootstrap_modal_forms.generic import (
     BSModalFormView,
@@ -131,12 +131,16 @@ class UserProfileView(TemplateView):
         down_paginator = Paginator(ordered_downloads,50)
         down_page_number = request.GET.get('downloads-page',1)
         down_page = down_paginator.get_page(down_page_number)
- 
+
+        # Contribution plot
+        plot = user.get_contribution_plot(ordered_downloads)
+        
         context={'user':user,
                  'downloads_range': down_paginator.page_range,
                  'downloads': down_page,
                  'N_downloads_total': down_paginator.count,
                  'admin_page': False,
+                 "plot": plot,
                  }
         return render(request, self.template_name, context=context)
 
@@ -163,7 +167,6 @@ class UserAdminView(TemplateView):
         user = request.user
 
         admin = Users.getAdmin().first()
-        print(admin)
         
         # get pending tasks
         pending_tasks = list(Tasks.custom_manager.pending_for_user(admin))
@@ -180,3 +183,8 @@ class UserAdminView(TemplateView):
                  'admin_page': True,
                  }
         return render(request, self.template_name, context=context)
+
+
+
+
+

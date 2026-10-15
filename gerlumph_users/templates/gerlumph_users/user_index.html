@@ -98,6 +98,22 @@
       </h1>
       <div class="p">
 
+
+	<br>
+	<br>
+	
+	<div class="activity-chart">
+	  <p>
+	    Activity in the current year
+	  </p>
+	  {% if plot %}
+	  <img src="data:image/png;base64,{{ plot }}" alt="Matplotlib Chart">
+	  {% else %}
+	  <p>No chart data available.</p>
+	  {% endif %}
+	</div>
+	
+	
 	<form id="downloads-form" class="ids-form" method="POST">
           {% csrf_token %}
 
